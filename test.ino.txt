@@ -1,0 +1,44 @@
+// This #include statement was automatically added by the Particle IDE.
+#include <Grove-Ultrasonic-Ranger.h>
+
+// This #include statement was automatically added by the Particle IDE.
+#include <Grove_ChainableLED.h>
+
+// This #include statement was automatically added by the Particle IDE.
+#include <Grove_Temperature_And_Humidity_Sensor.h>
+
+#define DHTPIN D2
+#define NUM_LEDS 1
+
+DHT dht(DHTPIN);
+ChainableLED leds(D4, D5, NUM_LEDS);
+
+double currentTemp = 0.0;
+float hue = 0.0;
+int threshold = 0;
+int counter = 0;
+int inchRange = 0;
+
+unsigned long lastCheck = 0;
+
+void setup() {
+    dht.begin();
+    leds.init();
+    Serial.begin(9600);
+    pinMode(6, OUTPUT);
+    Particle.variable("Temperature", currentTemp);
+    Particle.function("turnOn", turnOnLED);
+}
+
+void loop(){
+    currentTemp = dht.getTempCelcius();
+    delay(1000);
+}
+
+int turnOnLED(String args) {
+    hue = args.toFloat();
+    
+    leds.setColorHSB(0, hue, 1.0, 0.5);
+    
+    return 1;
+}

@@ -1,0 +1,34 @@
+// This #include statement was automatically added by the Particle IDE.
+#include <Grove-Ultrasonic-Ranger.h>
+
+// // This #include statement was automatically added by the Particle IDE.
+// #include <Grove-Ultrasonic-Ranger.h>
+
+Ultrasonic ultrasonic(4);
+
+int threshold = 0;
+int counter = 0;
+int inchRange = 0;
+//bool var = true;
+
+void setup() {
+    Serial.begin(9600);
+    pinMode(2, OUTPUT);
+    Particle.function("rangeFinder", setRangeFinder);
+}
+
+void loop(){
+    inchRange = ultrasonic.MeasureInInches();
+    if (inchRange < threshold) {
+        //code to start buzzer
+        digitalWrite(2, HIGH);
+        delay(750);
+        digitalWrite(2, LOW);
+        //break;
+    }
+}
+
+int setRangeFinder(String args) {
+    threshold = args.toInt();
+    return 1;
+}
